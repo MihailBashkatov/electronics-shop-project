@@ -13,3 +13,21 @@ def test_apply_discount():
     assert item.apply_discount() == 7
     assert type(item.calculate_total_price()) == float
 
+
+def test_name():
+    item = Item('toy',10, 3)
+    item.name = 'water'
+    assert item.name == 'water'
+    item.name = 'crocodile_green'
+    assert item.name == 'crocodile_'
+
+def test_string_to_number():
+    item = Item('toy', 10, 3)
+    assert item.string_to_number('10') == 10
+    assert item.string_to_number('1.3') == 1
+    assert item.string_to_number('9.8') == 9
+
+def test_instantiate_from_csv():
+    Item.instantiate_from_csv()
+    assert len(Item.all) == 5
+
