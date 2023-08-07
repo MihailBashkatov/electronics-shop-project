@@ -20,6 +20,12 @@ class Item:
         self.price = price
         self.quantity = quantity
 
+    def __repr__(self):
+        return f"{__class__.__name__}('{self.name}', {self.price}, {self.quantity})"
+
+    def __str__(self):
+        return f'{self.name}'
+
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
@@ -64,3 +70,6 @@ class Item:
                     value_decoded = value.encode('ISO-8859-1').decode('cp1251')
                     value_new = value_decoded.split()
                     cls.all.append(cls(value_new[0], value_new[1], value_new[2]))
+
+# item1 = Item("Смартфон", 10000, 20)
+# print(item1)
