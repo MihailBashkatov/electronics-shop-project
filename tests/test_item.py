@@ -1,5 +1,8 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
+import pytest
+
 from src.item import Item
+from src.phone import Phone
 
 
 def test_calculate_total_price():
@@ -36,3 +39,19 @@ def test_instantiate_from_csv():
         assert repr(item)[-1] == ")"
         for letter in str(item.name):
             assert letter.isalpha()
+
+phone_1 = Phone('Samsung', 20_000, 10, 4)
+assert isinstance(phone_1.number_of_sim, int)
+assert phone_1.number_of_sim == 4
+
+item_1 = Item('Nokia', 10_000, 20)
+assert item_1 + phone_1 == 30
+with pytest.raises(AssertionError):
+    assert item_1 + 10
+
+with pytest.raises(ValueError):
+    assert Phone('Samsung', 20_000, 10, 0)
+
+with pytest.raises(ValueError):
+    phone_1.number_of_sim = 0
+    assert phone_1
