@@ -70,6 +70,3 @@ class Item:
                     value_decoded = value.encode('ISO-8859-1').decode('cp1251')
                     value_new = value_decoded.split()
                     cls.all.append(cls(value_new[0], value_new[1], value_new[2]))
-
-# item1 = Item("Смартфон", 10000, 20)
-# print(item1)
