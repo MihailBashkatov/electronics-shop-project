@@ -26,6 +26,13 @@ class Item:
     def __str__(self):
         return f'{self.name}'
 
+
+    def __add__(self, other):
+        """ Метод позволяет складывать только экземпляры класса,
+        где первое слагаемое - экземпляр класса Phone"""
+        return self.quantity + other.quantity
+
+
     def calculate_total_price(self) -> float:
         """
         Рассчитывает общую стоимость конкретного товара в магазине.
