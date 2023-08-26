@@ -1,5 +1,7 @@
 import csv
 
+from src.InstantiateCSVError import InstantiateCSVError
+
 
 class Item:
     """
@@ -26,12 +28,10 @@ class Item:
     def __str__(self):
         return f'{self.name}'
 
-
     def __add__(self, other):
         """ Метод позволяет складывать только экземпляры класса,
         где первое слагаемое - экземпляр класса Phone"""
         return self.quantity + other.quantity
-
 
     def calculate_total_price(self) -> float:
         """
@@ -70,10 +70,22 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls):
-        with open('../src/items.csv', newline='', encoding='utf-8') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                for value in row.values():
-                    value_decoded = value.encode('ISO-8859-1').decode('cp1251')
-                    value_new = value_decoded.split()
-                    cls.all.append(cls(value_new[0], value_new[1], value_new[2]))
+        try:
+            with open('../src/items.csv', newline='', encoding='utf-8') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    for value in row.values():
+                        value_decoded = value.encode('ISO-8859-1').decode('cp1251')
+                        value_new = value_decoded.split()
+
+                        # Выбрасывает ошибку, если не хватает одной из колонок
+                        if len(value_new) < 3:
+                            raise InstantiateCSVError('_Файл item.csv поврежден_')
+
+                        cls.all.append(cls(value_new[0], value_new[1], value_new[2]))
+
+        # Обрабатывает ошибки в случае, если файл не найден или поврежден
+        except FileNotFoundError:
+            return ('_Отсутствует файл item.csv_')
+        except InstantiateCSVError as e:
+            return e.message
