@@ -1,4 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
+import os
+
+import pytest
 
 from src.InstantiateCSVError import InstantiateCSVError
 from src.item import Item
@@ -42,15 +45,29 @@ def test_string_to_number():
 #             assert letter.isalpha()
 
 
-def test_instantiate_from_csv_errors():
-    try:
-        Item.instantiate_from_csv()
-        for item in Item.all:
-            assert repr(item)[0:4] == "Item"
-            assert repr(item)[-1] == ")"
-            for letter in str(item.name):
-                assert letter.isalpha()
-    except InstantiateCSVError:
-        assert Item.instantiate_from_csv() == '_Файл item.csv поврежден_'
-    except FileNotFoundError:
-        assert Item.instantiate_from_csv() == '_Отсутствует файл item.csv_'
+# def test_instantiate_from_csv_errors():
+#     try:
+#         Item.instantiate_from_csv()
+#         for item in Item.all:
+#             assert repr(item)[0:4] == "Item"
+#             assert repr(item)[-1] == ")"
+#             for letter in str(item.name):
+#                 assert letter.isalpha()
+#     except InstantiateCSVError:
+#         assert Item.instantiate_from_csv() == '_Файл item.csv поврежден_'
+#     except FileNotFoundError:
+#         assert Item.instantiate_from_csv() == '_Отсутствует файл item.csv_'
+
+def test_instantiate_from_csv():
+    Item.instantiate_from_csv()
+    for item in Item.all:
+        assert repr(item)[0:4] == "Item"
+        assert repr(item)[-1] == ")"
+        for letter in str(item.name):
+            assert letter.isalpha()
+
+    Item.instantiate_from_csv(os.path.join('..', 'src', 'no_file.csv'))
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv(os.path.exists(os.path.join('..', 'src', 'it.csv')))
+
+
