@@ -1,4 +1,5 @@
 import csv
+import os
 
 from src.InstantiateCSVError import InstantiateCSVError
 
@@ -70,22 +71,20 @@ class Item:
 
     @classmethod
     def instantiate_from_csv(cls):
-        try:
-            with open('../src/items.csv', newline='', encoding='utf-8') as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    for value in row.values():
-                        value_decoded = value.encode('ISO-8859-1').decode('cp1251')
-                        value_new = value_decoded.split()
+        if not os.path.exists(os.path.join('..', 'src', 'items.csv')):
+            raise FileNotFoundError('_Отсутствует файл items.csv_')
 
-                        # Выбрасывает ошибку, если не хватает одной из колонок
-                        if len(value_new) < 3:
-                            raise InstantiateCSVError('_Файл item.csv поврежден_')
+        with open(os.path.join('..', 'src', 'items.csv'), newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                for value in row.values():
+                    value_decoded = value.encode('ISO-8859-1').decode('cp1251')
+                    value_new = value_decoded.split()
 
-                        cls.all.append(cls(value_new[0], value_new[1], value_new[2]))
+                    # Выбрасывает ошибку, если не хватает одной из колонок
+                    if len(value_new) < 3:
+                        raise InstantiateCSVError('_Файл item.csv поврежден_')
 
-        # Обрабатывает ошибки в случае, если файл не найден или поврежден
-        except FileNotFoundError:
-            return ('_Отсутствует файл item.csv_')
-        except InstantiateCSVError as e:
-            return e.message
+                    cls.all.append(cls(value_new[0], value_new[1], value_new[2]))
+
+
